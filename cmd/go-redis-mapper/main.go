@@ -5,7 +5,10 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jhawk7/go-redis-mapper/pkg/redis_client"
 )
+
+var redisClient *redis_client.RedisClient
 
 // custom middleware
 func Authorization() gin.HandlerFunc {
@@ -23,6 +26,7 @@ func Authorization() gin.HandlerFunc {
 
 func main() {
 	router := gin.Default()
+	redisClient = redis_client.InitClient()
 	authorized := router.Group("/authorized", Authorization())
 	authorized.GET()
 	authorized.POST()

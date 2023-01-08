@@ -1,0 +1,10 @@
+Redis Learnings:
+. start redis with `redis-cli`
+. use `SET <key> "<value>"` to store a key value pair
+. use `GET <key>` to retrieve a value based on the key
+. use `save` to commit changes to the dump.rdb file in the host filesystem
+. dump.rdb is usually located in the `/var/lib/redis/` dir for linux machines,
+but this can be checked by using `config get dir`
+. dump.rdb can be backed up via cron job or whatever
+. for backing up in docker container - mount a local dir to redis dir within the container via the docker-compose file; redis.conf can be set to save data every s seconds, this will write to the file in the mounted directory for persitent storage
+
