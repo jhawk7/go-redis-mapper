@@ -13,6 +13,10 @@ type RedisClient struct {
 	svc *redis.Client
 }
 
+type GetValue struct {
+	Key string
+}
+
 type KVPair struct {
 	Key   string
 	Value string

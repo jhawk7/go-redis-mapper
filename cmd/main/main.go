@@ -30,7 +30,7 @@ func main() {
 	router := gin.Default()
 	redisClient = redis_client.InitClient()
 	authorized := router.Group("/authorized").Use(Authorization())
-	authorized.GET("/mapper/:key", GetValueByKey)
+	authorized.GET("/mapper", GetValueByKey)
 	authorized.POST("/mapper", StoreKVPair)
 	authorized.PATCH("/mapper", UpdateKVPair)
 	authorized.DELETE("/mapper", DeleteKeys)
@@ -38,8 +38,14 @@ func main() {
 }
 
 func GetValueByKey(c *gin.Context) {
-	key := c.Param("key")
-	value, err := redisClient.GetValue(c.Request.Context(), key)
+	var getReq redis_client.GetValue
+	if bindErr := c.BindJSON(&getReq); bindErr != nil {
+		err := fmt.Errorf("failed to bind request data to object; [error: %v]", bindErr.Error())
+		ErrorHandler(c, err, 0, false)
+		return
+	}
+
+	value, err := redisClient.GetValue(c.Request.Context(), getReq.Key)
 	if err != nil {
 		ErrorHandler(c, err, http.StatusBadRequest, false)
 		return
